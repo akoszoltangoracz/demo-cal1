@@ -12,7 +12,7 @@ const store = new Vuex.Store({
       user: null,
       token: null,
     },
-    activities: {
+    interestGroups: {
       list: [],
       count: 0,
     },
@@ -29,14 +29,23 @@ const store = new Vuex.Store({
       state.user.token = token;
       localStorage.setItem(AUTH_TOKEN_STORE, token);
     },
-    setActivities(state, activities) {
-      state.activities.list = activities;
+    //interest groups
+    setInterestGroups(state, interestGroups) {
+      state.interestGroups.list = interestGroups;
     },
-    setActivityCount(state, activitiesCount) {
-      state.activities.count = activitiesCount;
+    setInterestGroupCount(state, interestGroupCount) {
+      state.interestGroups.count = interestGroupCount;
+    },
+    // events
+    setEvents(state, events) {
+      state.events.list = events;
+    },
+    setEventCount(state, eventCount) {
+      state.events.count = eventCount;
     },
   },
   actions: {
+    // user
     async register({ commit }, user) {
       console.log('registering', user)
       const { data } = await axios.post('/api/register', user);
@@ -54,16 +63,80 @@ const store = new Vuex.Store({
         commit('setUserToken', data.token);
       }
     },
-    async listActivities({ commit }) {
-      const { data } = await axios.get('/api/activities');
+    async loadMe({ commit }) {
+      const { data } = await axios.get('/api/me');
+      if (data.status) {
+        console.log('setting user', data.user)
+        commit('setUser', data.user);
+      }
 
-      commit('setActivities', data.results);
-      commit('setActivityCount', data.count);
+      return data;
     },
-    async createActivity({ commit }, activity) {
-      const { data } = await axios.post('/api/activities', {
-        title: activity.title,
+
+    // interest group
+    async listInterestGroups({ commit }) {
+      const { data } = await axios.get('/api/interestGroups');
+
+      commit('setInterestGroups', data.results);
+      commit('setInterestGroupCount', data.count);
+    },
+    async createInterestGroup({ commit }, interestGroup) {
+      const { data } = await axios.post('/api/interestGroups', {
+        title: interestGroup.title,
       });
+
+      return data;
+    },
+
+    // event
+    async createEvent({ commit }, event) {
+      console.log('creating event', JSON.stringify(event, null, 2))
+      const { data } = await axios.post('/api/events', {
+        title: event.title,
+        description: event.description,
+        date: event.date,
+        interestGroupId: event.interestGroupId,
+      });
+
+      return data;
+    },
+    async listEvents({ commit }) {
+      const { data } = await axios.get('/api/events');
+
+      commit('setEvents', data.results);
+      commit('setEventCount', data.count);
+    },
+    async createEventCover({ commit }, { eventId, formData }) {
+      const { data } = await axios.post(`/api/events/${eventId}/cover`, formData);
+
+      return data;
+    },
+    async createInterestGroupCover({ commit }, { interestGroupId, formData }) {
+      const { data } = await axios.post(`/api/interestGroups/${interestGroupId}/cover`, formData);
+
+      return data;
+    },
+
+    // sign up
+    async createInterestGroupSignUp({ commit }, { interestGroupId }) {
+      const { data } = await axios.post(`/api/me/addInterestGroup`, { interestGroupId });
+
+      return data;
+    },
+    async createEventSignUp({ commit }, { eventId }) {
+      const { data } = await axios.post(`/api/me/addEvent`, { eventId });
+
+      return data;
+    },
+
+    // chat
+    async createInterestGroupChat({ commit }, { interestGroupId, message }) {
+      const { data } = await axios.post(`/api/interestGroups/${interestGroupId}/chat`, { message });
+
+      return data;
+    },
+    async createEventChat({ commit }, { eventId, message }) {
+      const { data } = await axios.post(`/api/events/${eventId}/chat`, { message });
 
       return data;
     },
