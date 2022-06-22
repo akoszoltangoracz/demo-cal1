@@ -343,7 +343,7 @@ app.post('/api/events', async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    json.status(500).json(err);
+    res.status(500).json(err);
   }
 });
 
