@@ -27,7 +27,7 @@ const store = new Vuex.Store({
     },
     setUserToken(state, token) {
       state.user.token = token;
-      localStorage.setItem(AUTH_TOKEN_STORE, token);
+      localStorage.setItem(AUTH_TOKEN_STORE, `Bearer ${token}`);
     },
     //interest groups
     setInterestGroups(state, interestGroups) {
@@ -48,12 +48,12 @@ const store = new Vuex.Store({
     // user
     async register({ commit }, user) {
       console.log('registering', user)
-      const { data } = await axios.post('/api/register', user);
+      const { data } = await axios.post('/api/auth/register', user);
 
       return data;
     },
     async login({ commit }, login) {
-      const { data } = await axios.post('/api/login', {
+      const { data } = await axios.post('/api/auth/login', {
         username: login.username,
         password: login.password,
       });
@@ -64,7 +64,7 @@ const store = new Vuex.Store({
       }
     },
     async loadMe({ commit }) {
-      const { data } = await axios.get('/api/me');
+      const { data } = await axios.get('/api/users/me');
       if (data.status) {
         console.log('setting user', data.user)
         commit('setUser', data.user);
@@ -75,13 +75,13 @@ const store = new Vuex.Store({
 
     // interest group
     async listInterestGroups({ commit }) {
-      const { data } = await axios.get('/api/interestGroups');
+      const { data } = await axios.get('/api/interests');
 
       commit('setInterestGroups', data.results);
       commit('setInterestGroupCount', data.count);
     },
     async createInterestGroup({ commit }, interestGroup) {
-      const { data } = await axios.post('/api/interestGroups', {
+      const { data } = await axios.post('/api/interests', {
         title: interestGroup.title,
       });
 
@@ -112,7 +112,7 @@ const store = new Vuex.Store({
       return data;
     },
     async createInterestGroupCover({ commit }, { interestGroupId, formData }) {
-      const { data } = await axios.post(`/api/interestGroups/${interestGroupId}/cover`, formData);
+      const { data } = await axios.post(`/api/interests/${interestGroupId}/cover`, formData);
 
       return data;
     },
@@ -130,8 +130,8 @@ const store = new Vuex.Store({
     },
 
     // chat
-    async createInterestGroupChat({ commit }, { interestGroupId, message }) {
-      const { data } = await axios.post(`/api/interestGroups/${interestGroupId}/chat`, { message });
+    async createInterestGroupChat({ commit }, { interestGroupId, content }) {
+      const { data } = await axios.post(`/api/interests/`, { content, interestId: interestGroupId });
 
       return data;
     },
