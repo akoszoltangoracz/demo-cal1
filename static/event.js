@@ -98,7 +98,7 @@ const EventCoverForm = Vue.component('event-cover-form', {
       const elem = document.getElementById('event-cover');
       console.log('files', elem.files)
       const formData = new FormData();
-      formData.append('coverFile', elem.files[0]);
+      formData.append('file', elem.files[0]);
 
       await this.createEventCover({ eventId: this.form.eventId, formData });
     },

@@ -129,7 +129,7 @@ const InterestGroupSignUp = Vue.component('interest-group-sign-up', {
 const InterestGroupChatForm = Vue.component('interest-group-chat-form', {
   data: () => ({
     form: {
-      message: '',
+      content: '',
       interestGroupId: '',
     },
   }),
@@ -151,9 +151,9 @@ const InterestGroupChatForm = Vue.component('interest-group-chat-form', {
       <fieldset>
         <legend>interest group chat message</legend>
         <select v-model="form.interestGroupId">
-          <option v-for="interestGroup in interestGroups.list" :key="interestGroup._id" :value="interestGroup._id">{{interestGroup.title}}</option>
+          <option v-for="interestGroup in interestGroups.list" :key="interestGroup._id" :value="interestGroup._id">{{interestGroup._id}}</option>
         </select>
-        <label>message</label><input v-model="form.message" type="text"/>
+        <label>content</label><input v-model="form.message" type="text"/>
         <button @click.prevent="doCreateInterestGroupChat">send message</button>
       </fieldset>
     </div>
