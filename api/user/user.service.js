@@ -11,7 +11,28 @@ const find = async ({criteria}) => {
   return getDb().collection(constants.USER_COLLECTION).find(criteria);
 };
 
+const update = async (id, updates) => {
+  const update = {
+    ...updates,
+  };
+
+  if (update.interest) {
+    update.interest = interests.map(interest => ObjectId(interest));
+  }
+
+  return getDb().collection(constants.USER_COLLECTION).findOneAndUpdate({
+    _id: id,
+  }, {
+    $set: {
+      ...update,
+    }
+  }, {
+    returnNewDocument: true,
+  })
+};
+
 module.exports = {
   findById,
   find,
+  update,
 };
