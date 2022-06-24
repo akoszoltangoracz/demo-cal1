@@ -29,6 +29,7 @@ router.post("/events", authMiddleware, handler(eventModule.controller.create));
 router.put("/events/:id", authMiddleware, handler(eventModule.controller.update));
 router.delete("/events/:id", authMiddleware, handler(eventModule.controller.remove));
 router.post("/events/:id/cover", authMiddleware, uploadMiddleware.single("file"), handler(eventModule.controller.coverUpload));
+router.post("/events/:id/toggleAttend", authMiddleware, handler(eventModule.controller.toggleAttend));
 
 const postModule = require("./post");
 router.get("/posts", authMiddleware, handler(postModule.controller.list));

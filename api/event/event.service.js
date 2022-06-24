@@ -40,6 +40,7 @@ const create = async ({ title, description, startDate, endDate, interestId }, us
     interestId: ObjectId(interestId),
     startDate: new Date(startDate),
     endDate: new Date(endDate),
+    attendees: [],
     createdBy: user._id,
     createdAt: new Date(),
   });
@@ -55,6 +56,7 @@ const update = async (id, updateObj) => {
   await getDb().collection(constants.EVENT_COLLECTION).updateOne({ _id: ObjectId(id) }, {
     $set: {
       ...updateObj,
+      attendees: event.attendees,
       interestId: event.interestId,
       startDate: new Date(updateObj.startDate || event.startDate),
       endDate: new Date(updateObj.endDate || event.endDate),
@@ -75,6 +77,19 @@ const coverUpload = async (id, filePath) => {
   return update(id, { coverUrl });
 };
 
+const toggleAttend = async (id, user) => {
+  const event = await findById(id);
+  const isAttended = event.attendees
+    .map((userId) => userId.toString())
+    .find((userId) => userId === user._id.toString());
+
+  let update = { $addToSet: { attendees: ObjectId(user._id) } };
+  if (isAttended) {
+    update = { $pull: { attendees: ObjectId(user._id) } };
+  }
+  await getDb().collection(constants.EVENT_COLLECTION).updateOne({ _id: ObjectId(id) }, update);
+  return findById(id);
+};
 
 module.exports = {
   checkPermission,
@@ -84,4 +99,5 @@ module.exports = {
   update,
   remove,
   coverUpload,
+  toggleAttend,
 };

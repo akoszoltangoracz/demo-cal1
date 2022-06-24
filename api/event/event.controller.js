@@ -27,4 +27,8 @@ module.exports = {
     await eventService.coverUpload(req.params.id, req.file.path);
     res.send();
   },
+  toggleAttend: async (req, res) => {
+    const result = await eventService.toggleAttend(req.params.id, req.user);
+    res.json(result);
+  }
 }
