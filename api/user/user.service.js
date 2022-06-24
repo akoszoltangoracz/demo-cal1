@@ -16,8 +16,8 @@ const update = async (id, updates) => {
     ...updates,
   };
 
-  if (update.interest) {
-    update.interest = interests.map(interest => ObjectId(interest));
+  if (update.interests) {
+    update.interests = update.interests.map(interest => ObjectId(interest));
   }
 
   return getDb().collection(constants.USER_COLLECTION).findOneAndUpdate({
