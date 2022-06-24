@@ -17,4 +17,15 @@ module.exports = {
       password: undefined,
     })
   },
+
+  list: async (req, res) => {
+    const users = await userService.list();
+
+    const masked = users.map(u => ({
+      ...u,
+      password: undefined,
+    }));
+
+    res.json(masked);
+  },
 }

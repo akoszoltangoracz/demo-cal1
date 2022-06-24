@@ -31,8 +31,13 @@ const update = async (id, updates) => {
   })
 };
 
+const list = async () => {
+  return getDb().collection(constants.USER_COLLECTION).find().toArray();
+};
+
 module.exports = {
   findById,
   find,
   update,
+  list,
 };

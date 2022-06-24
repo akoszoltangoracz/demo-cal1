@@ -13,6 +13,7 @@ router.post("/auth/login", handler(authModule.controller.login));
 const userModule = require("./user");
 router.get("/users/me", authMiddleware, handler(userModule.controller.me));
 router.post("/users/me", authMiddleware, handler(userModule.controller.updateMe));
+router.get("/users", authMiddleware, handler(userModule.controller.list));
 
 const interestModule = require("./interest");
 router.get("/interests", authMiddleware, handler(interestModule.controller.list));
