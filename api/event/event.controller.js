@@ -1,7 +1,7 @@
 const eventService = require("./event.service");
 module.exports = {
   list: async (req, res) => {
-    const result = await eventService.list(req.query.interestId);
+    const result = await eventService.list(req.query.interestId, req.user);
     res.json(result);
   },
   get: async (req, res) => {

@@ -22,8 +22,10 @@ const findById = async (id) => {
   return event;
 };
 
-const list = async (interestId) => {
-  const query = interestId ? { interestId } : {};
+const list = async (interestId, user) => {
+  const query = interestId ? { interestId } : {
+    interestId: { $in: user.interests }
+  };
   return getDb().collection(constants.EVENT_COLLECTION).find(query).sort({ startDate: -1 }).toArray();
 };
 
