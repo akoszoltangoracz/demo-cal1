@@ -22,15 +22,18 @@ const findById = async (id) => {
   return event;
 };
 
-const list = async () => {
-  return getDb().collection(constants.EVENT_COLLECTION).find({}).sort({ startDate: -1 }).toArray();
+const list = async (interestId) => {
+  const query = interestId ? { interestId } : {};
+  return getDb().collection(constants.EVENT_COLLECTION).find(query).sort({ startDate: -1 }).toArray();
 };
 
 const create = async ({ title, description, startDate, endDate, interestId }, user) => {
   if (!title) {
     throw new errors.BadRequestError("Missing event name");
   }
-
+  if (!interestId) {
+    throw new errors.BadRequestError("Missing event's interestId");
+  }
   const result = await getDb().collection(constants.EVENT_COLLECTION).insertOne({
     title,
     description,

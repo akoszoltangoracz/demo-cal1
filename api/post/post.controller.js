@@ -1,7 +1,7 @@
 const postService = require("./post.service");
 module.exports = {
   list: async (req, res) => {
-    const result = await postService.list();
+    const result = await postService.list(req.query.interestId);
     res.json(result);
   },
   get: async (req, res) => {
