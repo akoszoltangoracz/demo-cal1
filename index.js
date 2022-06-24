@@ -4,11 +4,13 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
+const cors = require("cors");
 const router = require("./api/router");
 
 app.use(morgan('tiny'));
 
 const port = process.env.PORT || 8001;
+app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use('/static', express.static('static'))
 
