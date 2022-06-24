@@ -34,7 +34,8 @@ const login = async ({ username, password }) => {
   }
   const userData = {
     id: user._id.toString(),
-    username: user.username
+    username: user.username,
+    isAdmin: !!user.isAdmin,
   };
 
   const token = jwt.sign(userData, JWT_SECRET, {

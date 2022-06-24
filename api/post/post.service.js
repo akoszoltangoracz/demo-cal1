@@ -22,13 +22,17 @@ const findById = async (id) => {
   return post;
 };
 
-const list = async () => {
-  return getDb().collection(constants.POST_COLLECTION).find({}).sort({ startDate: -1 }).toArray();
+const list = async (interestId) => {
+  const query = interestId ? { interestId } : {};
+  return getDb().collection(constants.POST_COLLECTION).find(query).sort({ startDate: -1 }).toArray();
 };
 
 const create = async ({ content, interestId }, user) => {
   if (!content) {
     throw new errors.BadRequestError("Missing post content");
+  }
+  if (!interestId) {
+    throw new errors.BadRequestError("Missing post's interestId");
   }
 
   const result = await getDb().collection(constants.POST_COLLECTION).insertOne({
